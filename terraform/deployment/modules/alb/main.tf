@@ -44,6 +44,16 @@ resource "aws_lb_target_group" "alb-tg" {
   port     = var.application-port
   target_type = "ip" 
   protocol = "HTTP"
+  health_check {
+      path                  = "/healthz"
+      protocol              = "HTTP"
+      matcher               = "200"
+      port                  = var.application-port
+      healthy_threshold     = 2
+      unhealthy_threshold   = 2
+      timeout               = 6
+      interval              = 30
+  }
 
   vpc_id   = var.vpc_id
 }
