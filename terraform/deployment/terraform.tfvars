@@ -10,7 +10,7 @@ Terraform                              = "true"
 
 # General Variables
 domain_name                              = "networking.rihad.co.uk"
-application-port                         = 3000
+application-port                         = 8080
 
 # AWS VPC Variables
 vpc-cidr                                 = "10.0.0.0/16"
@@ -27,7 +27,7 @@ subnet-map_public_ip_on_launch_private   = false
 # ECS Variables
 ecs-container-name                       = "container"
 ecs-image                                = "291759414346.dkr.ecr.eu-west-2.amazonaws.com/ecs-project:latest"
-ecs-dockerport                           = 3000
+ecs-dockerport                           = 8080
 ecs-memory                               = 2048
 ecs-cpu                                  = 1024
 ecs-desiredcount                         = 2
