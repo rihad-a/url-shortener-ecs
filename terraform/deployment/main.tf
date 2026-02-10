@@ -62,3 +62,13 @@ domain_name                              = var.domain_name
   alb_dns           = module.alb.alb_dns
   alb_zoneid        = module.alb.alb_zoneid
 }
+
+# DynamoDB Module
+
+module "dynamodb" {
+  source = "./modules/dynamodb"
+
+
+  # Use these outputs
+
+}
