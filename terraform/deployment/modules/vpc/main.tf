@@ -3,8 +3,8 @@
 resource "aws_vpc" "terraform_vpc" {
     cidr_block = var.vpc-cidr
     instance_tenancy = "default"
-    enable_dns_hostnames = true 
-    enable_dns_support   = true
+    enable_dns_hostnames = true  
+    enable_dns_support = true
 }
 
 # Creating the internet gateway
@@ -41,7 +41,21 @@ resource "aws_subnet" "private_2" {
   availability_zone       = var.subnet-az-2b
 }
 
+# Creating the nat gateway
 
+resource "aws_nat_gateway" "nat_gw" {
+  allocation_id = aws_eip.ngw_eip.id
+  subnet_id     = aws_subnet.public_1.id
+
+depends_on = [aws_internet_gateway.gw]
+
+}
+
+# Creating the elastic ip for the nat gateway
+
+resource "aws_eip" "ngw_eip" {
+
+}
 
 # Creating the public route table and relevant associations to public subnets
 
@@ -69,6 +83,10 @@ resource "aws_route_table_association" "public2" {
 resource "aws_route_table" "private_route" {
   vpc_id = aws_vpc.terraform_vpc.id
 
+  route {
+    cidr_block = var.routetable-cidr
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+  }
 }
 
 resource "aws_route_table_association" "private1" {
@@ -79,4 +97,24 @@ resource "aws_route_table_association" "private1" {
 resource "aws_route_table_association" "private2" {
   subnet_id      = aws_subnet.private_2.id
   route_table_id = aws_route_table.private_route.id
+}
+
+# Creating endpoint for DynamoDB
+
+resource "aws_vpc_endpoint" "dynamodb" {
+    vpc_id              = aws_vpc.terraform_vpc.id
+    service_name        = "com.amazonaws.eu-west-2.dynamodb"
+    vpc_endpoint_type   = "Gateway"
+    route_table_ids     = [aws_route_table.private_route.id]
+    policy              = jsonencode({
+        "Version"       : "2012-10-17",
+        "Statement"     : [
+            {
+                "Effect"    : "Allow",
+                "Principal" : "*",
+                "Action"    : "*",
+                "Resource"  : "*"
+            }
+        ]
+    })
 }
