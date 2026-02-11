@@ -3,10 +3,10 @@
 resource "aws_dynamodb_table" "url-shortener" {
   name           = "url-shortener"
   billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "short_id"
+  hash_key       = "url"
 
   attribute {
-    name = "short_id"
+    name = "url"
     type = "S"
   }
 
