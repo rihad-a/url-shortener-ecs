@@ -122,7 +122,7 @@ resource "aws_ecs_service" "ecs-project" {
   launch_type = "FARGATE"
 
   load_balancer {
-    target_group_arn = var.tg_arn
+    target_group_arn = var.tg-arn-blue
     container_name   = var.ecs-container-name
     container_port   = var.ecs-dockerport
   }
@@ -131,6 +131,11 @@ resource "aws_ecs_service" "ecs-project" {
    subnets         = [var.subnetpri1_id]
    security_groups = [aws_security_group.sg2.id]
  }
+
+  deployment_controller { 
+    type = "CODE_DEPLOY" 
+  } 
+
 }
 
 # Creating a security group

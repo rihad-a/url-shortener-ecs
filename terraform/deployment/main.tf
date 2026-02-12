@@ -46,7 +46,7 @@ application-port                         = var.application-port
 
 
   # Use these outputs
-  tg_arn            = module.alb.tg_arn
+  tg-arn-blue       = module.alb.tg-arn-blue
   subnetpri1_id     = module.aws_vpc.subnet-pri1
   vpc_id            = module.aws_vpc.vpc-id
 }
@@ -72,3 +72,21 @@ module "dynamodb" {
   # Use these outputs
 
 }
+
+# Codedeploy Module
+
+module "codedeploy" {
+  source = "./modules/codedeploy"
+
+  deployment-config = var.deployment-config
+
+  # Use these outputs
+  tg-arn-blue        = module.alb.tg-arn-blue
+  tg-arn-green       = module.alb.tg-arn-green
+  lb-listener-arn    = module.alb.lb-listener-arn
+  ecs-cluster-name   = module.ecs.ecs-cluster-name
+  ecs-service-name   = module.ecs.ecs-service-name
+
+}
+
+

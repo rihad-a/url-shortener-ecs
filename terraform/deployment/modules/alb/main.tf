@@ -16,7 +16,7 @@ resource "aws_lb_listener" "alb_listener_https" {
    protocol             = "HTTPS"
    certificate_arn = var.certificate_arn
    default_action {
-    target_group_arn = aws_lb_target_group.alb-tg.id
+    target_group_arn = aws_lb_target_group.alb-tg-blue.id
     type             = "forward"
   }
 }
@@ -39,8 +39,8 @@ resource "aws_lb_listener" "alb_listener_http" {
 
 # Creating the ALB target group
 
-resource "aws_lb_target_group" "alb-tg" {
-  name     = "alb-tg"
+resource "aws_lb_target_group" "alb-tg-blue" {
+  name     = "alb-tg-blue"
   port     = var.application-port
   target_type = "ip" 
   protocol = "HTTP"
@@ -57,6 +57,26 @@ resource "aws_lb_target_group" "alb-tg" {
 
   vpc_id   = var.vpc_id
 }
+
+resource "aws_lb_target_group" "alb-tg-green" {
+  name     = "alb-tg-green"
+  port     = var.application-port
+  target_type = "ip" 
+  protocol = "HTTP"
+  health_check {
+      path                  = "/healthz"
+      protocol              = "HTTP"
+      matcher               = "200"
+      port                  = var.application-port
+      healthy_threshold     = 2
+      unhealthy_threshold   = 2
+      timeout               = 6
+      interval              = 30
+  }
+
+  vpc_id   = var.vpc_id
+}
+
 
 # Creating the ALB security group group
 

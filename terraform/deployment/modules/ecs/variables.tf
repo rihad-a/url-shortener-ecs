@@ -39,9 +39,9 @@ variable "ecs-desiredcount" {
 
 # Module Variables 
 
-variable "tg_arn" {
+variable "tg-arn-blue" {
   type        = string
-  description = "The target group arn from the alb module"
+  description = "The blue target group arn from the alb module"
 }
 
 variable "subnetpri1_id" {
@@ -53,4 +53,6 @@ variable "vpc_id" {
   type        = string
   description = "The vpc id from the vpc module"
 }
+
+
 
