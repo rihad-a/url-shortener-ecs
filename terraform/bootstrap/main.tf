@@ -19,6 +19,20 @@ resource "aws_s3_bucket_public_access_block" "rihads3" {
   restrict_public_buckets = true
 }
 
+# S3 Bucket Creation for artifacts
+
+resource "aws_s3_bucket" "artifact" {
+  bucket = "artifact-ecs"
+}
+
+resource "aws_s3_bucket_versioning" "artifact" {
+  bucket = aws_s3_bucket.artifact.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+
 # Hosted Zone Creation
 
 resource "aws_route53_zone" "networking" {
