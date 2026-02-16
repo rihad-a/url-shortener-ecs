@@ -44,12 +44,89 @@ resource "aws_codedeploy_deployment_group" "ecs" {
       } 
  
       target_group { 
-        name = var.tg-arn-blue
+        name = var.tg-blue-name
       } 
  
       target_group { 
-        name = var.tg-arn-green
+        name = var.tg-green-name
       } 
     } 
   } 
 } 
+
+# Codedeploy IAM resources
+
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "codedeploy" {
+
+  statement {
+    sid    = "ECSPolicy"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeServices",
+      "ecs:CreateTaskSet",
+      "ecs:DeleteTaskSet",
+      "ecs:UpdateServicePrimaryTaskSet"
+    ]
+    resources = [
+      "arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:service/${var.ecs-cluster-name}/${var.ecs-service-name}",
+      "arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:task-set/${var.ecs-cluster-name}/${var.ecs-service-name}/*"
+    ]
+  }
+
+  statement {
+    sid    = "ELBPolicy"
+    effect = "Allow"
+    actions = [
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:ModifyListener",
+      "elasticloadbalancing:DescribeRules",
+      "elasticloadbalancing:ModifyRule"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "PassRolePolicy"
+    effect = "Allow"
+    actions = [
+      "iam:PassRole"
+    ]
+    resources = [
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskRole"
+    ]
+  }
+}
+
+resource "aws_iam_role" "codedeploy" {
+  name = "codedeploy-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = [
+            "codedeploy.amazonaws.com"
+          ]
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "codedeploy" {
+  name   = "codedeploy-policy"
+  role   = aws_iam_role.codedeploy.id
+  policy = data.aws_iam_policy_document.codedeploy.json
+}
+
+resource "aws_codedeploy_app" "this" {
+  compute_platform = "ECS"
+  name             = var.ecs-service-name
+}

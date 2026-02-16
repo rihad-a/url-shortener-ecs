@@ -105,3 +105,8 @@ variable "deployment-config" {
   type        = string
   description = "deployment configuration type for codedeploy"
 }
+
+variable "region" {
+  type        = string
+  description = "The current region"
+}

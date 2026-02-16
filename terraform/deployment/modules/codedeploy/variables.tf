@@ -5,16 +5,21 @@ variable "deployment-config" {
   description = "deployment configuration type for codedeploy"
 }
 
-# Module Variables 
-
-variable "tg-arn-blue" {
+variable "region" {
   type        = string
-  description = "ALB blue target group arn"
+  description = "The current region"
 }
 
-variable "tg-arn-green" {
+# Module Variables 
+
+variable "tg-blue-name" {
   type        = string
-  description = "ALB green target group arn"
+  description = "ALB blue target group name"
+}
+
+variable "tg-green-name" {
+  type        = string
+  description = "ALB green target group name"
 }
 
 variable "lb-listener-arn" {

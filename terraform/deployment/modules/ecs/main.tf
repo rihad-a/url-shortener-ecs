@@ -66,7 +66,6 @@ resource "aws_cloudwatch_log_group" "ecs" {
 
 }
 
-
 # Assigning a task definition
 
 resource "aws_ecs_task_definition" "ecs-docker" {
@@ -122,7 +121,7 @@ resource "aws_ecs_service" "ecs-project" {
   launch_type = "FARGATE"
 
   load_balancer {
-    target_group_arn = var.tg-arn-blue
+    target_group_arn = var.tg-blue-arn
     container_name   = var.ecs-container-name
     container_port   = var.ecs-dockerport
   }

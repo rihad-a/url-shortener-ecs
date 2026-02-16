@@ -39,7 +39,7 @@ variable "ecs-desiredcount" {
 
 # Module Variables 
 
-variable "tg-arn-blue" {
+variable "tg-blue-arn" {
   type        = string
   description = "The blue target group arn from the alb module"
 }

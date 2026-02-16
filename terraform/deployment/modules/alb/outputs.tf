@@ -1,14 +1,20 @@
 # Output variables to be used in other modules
 
-output "tg-arn-blue" {
+output "tg-blue-name" {
+  description = "ALB blue target group name"
+  value       = aws_lb_target_group.alb-tg-blue.name
+}
+
+output "tg-green-name" {
+  description = "ALB green target group name"
+  value       = aws_lb_target_group.alb-tg-green.name
+}
+
+output "tg-blue-arn" {
   description = "ALB blue target group arn"
   value       = aws_lb_target_group.alb-tg-blue.arn
 }
 
-output "tg-arn-green" {
-  description = "ALB green target group arn"
-  value       = aws_lb_target_group.alb-tg-green.arn
-}
 
 output "alb_dns" {
   description = "ALB dns name"
