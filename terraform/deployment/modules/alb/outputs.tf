@@ -31,3 +31,7 @@ output "lb-listener-arn" {
   value       = aws_lb_listener.alb_listener_https.arn
 }
 
+output "alb-arn" {
+  description = "ALB  arn"
+  value       = aws_lb.terraform-alb.arn
+}

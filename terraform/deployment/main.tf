@@ -90,4 +90,15 @@ module "codedeploy" {
 
 }
 
+# WAF Module
+
+module "waf" {
+  source = "./modules/waf"
+
+
+  # Use these outputs
+  alb-arn             = module.alb.alb-arn
+
+}
+
 
