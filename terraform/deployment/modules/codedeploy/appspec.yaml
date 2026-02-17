@@ -1,0 +1,9 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "ENTER TASK DEFINITION HERE"
+        LoadBalancerInfo:
+          ContainerName: "CHANGE CONTAINER NAME"
+          ContainerPort: 8080
