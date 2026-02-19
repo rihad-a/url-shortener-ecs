@@ -36,3 +36,8 @@ ecs-desiredcount                         = 1
 
 deployment-config                        = "CodeDeployDefault.ECSAllAtOnce"
 region                                   = "eu-west-2"
+
+# WAF Variables
+
+waf-name                                 = "alb-waf"
+waf-metric-name                          = "waf-logs"

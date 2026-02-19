@@ -110,3 +110,16 @@ variable "region" {
   type        = string
   description = "The current region"
 }
+
+
+# WAF Variables
+
+variable "waf-name" {
+  type        = string
+  description = "The name of the WAF"
+}
+
+variable "waf-metric-name" {
+  type        = string
+  description = "The name of the metric for logs"
+}

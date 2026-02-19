@@ -95,6 +95,9 @@ module "codedeploy" {
 module "waf" {
   source = "./modules/waf"
 
+  waf-name            = var.waf-name
+  waf-metric-name     = var.waf-metric-name
+
 
   # Use these outputs
   alb-arn             = module.alb.alb-arn
