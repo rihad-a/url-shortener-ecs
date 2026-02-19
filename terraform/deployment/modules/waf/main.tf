@@ -1,8 +1,8 @@
 # Creating a WAF
 
-resource "aws_wafv2_web_acl" "ecs-waf" {
-  name        = "ecs-waf"
-  description = "ECS managed rule for a WAF."
+resource "aws_wafv2_web_acl" "alb-waf" {
+  name        = var.waf-name
+  description = "WAF for ALB protection"
   scope       = "REGIONAL"
 
   default_action {
@@ -10,7 +10,7 @@ resource "aws_wafv2_web_acl" "ecs-waf" {
   }
 
   rule {
-    name     = "rule-1"
+    name     = "AWSManagedRulesCommonRuleSet"
     priority = 1
 
     override_action {
@@ -21,41 +21,47 @@ resource "aws_wafv2_web_acl" "ecs-waf" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
-
-        rule_action_override {
-          action_to_use {
-            count {}
-          }
-
-          name = "SizeRestrictions_QUERYSTRING"
-        }
-
-        rule_action_override {
-          action_to_use {
-            count {}
-          }
-
-          name = "NoUserAgent_HEADER"
-        }
       }
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
-      metric_name                = "friendly-rule-metric-name"
-      sampled_requests_enabled   = false
+      cloudwatch_metrics_enabled = true
+      metric_name                = "CommonRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "RateLimitRule"
+    priority = 2
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 2000
+        aggregate_key_type = "IP"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimit"
+      sampled_requests_enabled   = true
     }
   }
 
   visibility_config {
-    cloudwatch_metrics_enabled = false
-    metric_name                = "friendly-metric-name"
-    sampled_requests_enabled   = false
-  }
+    cloudwatch_metrics_enabled = true
+    metric_name                = var.waf-metric-name
+    sampled_requests_enabled   = true
+  }  
 }
 
 # Connecting WAF to ALB
 resource "aws_wafv2_web_acl_association" "alb_association" {
   resource_arn = var.alb-arn
-  web_acl_arn  = aws_wafv2_web_acl.ecs-waf.arn
+  web_acl_arn  = aws_wafv2_web_acl.alb-waf.arn
 }
