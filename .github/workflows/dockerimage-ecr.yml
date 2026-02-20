@@ -1,0 +1,62 @@
+name: Create and Push Image to ECR
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - app/**
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write   
+  id-token: write  
+
+env: 
+  AWS_REGION : "eu-west-2"
+
+jobs:
+  DockerImageBuildAndPush:
+    runs-on: ubuntu-24.04
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+          role-to-assume: ${{ secrets.GitHubActionsRole }}
+          role-session-name: GitHubActionsRole
+          aws-region: ${{ env.AWS_REGION }}
+
+    - name: Authenticating docker client to Amazon ECR registry 
+      run: aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY }} 
+
+    - name: Building docker image
+      run: docker build -t url-shortener1 -t url-shortener2 ./app
+
+    - name: Run Trivy vulnerability scan
+      uses: aquasecurity/trivy-action@0.30.0
+      with:
+          image-ref: 'url-shortener1'
+          format: 'sarif'
+          exit-code: 0
+          severity: 'CRITICAL,HIGH'
+          output: 'trivy-results.sarif'
+ 
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+            sarif_file: 'trivy-results.sarif'
+
+    - name: Tagging image to ECR repository
+      run: |
+        docker tag url-shortener1 ${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+        docker tag url-shortener2 ${{ secrets.ECR_REPOSITORY }}:latest
+
+    - name: Pushing docker image
+      run: docker push ${{ secrets.ECR_REPOSITORY }} --all-tags
+
+      
