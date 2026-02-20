@@ -70,8 +70,8 @@ data "aws_iam_policy_document" "codedeploy" {
       "ecs:UpdateServicePrimaryTaskSet"
     ]
     resources = [
-      "arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:service/${var.ecs-cluster-name}/${var.ecs-service-name}",
-      "arn:aws:ecs:${var.region}:${data.aws_caller_identity.current.account_id}:task-set/${var.ecs-cluster-name}/${var.ecs-service-name}/*"
+      "arn:aws:ecs:eu-west-2:${data.aws_caller_identity.current.account_id}:service/${var.ecs-cluster-name}/${var.ecs-service-name}",
+      "arn:aws:ecs:eu-west-2:${data.aws_caller_identity.current.account_id}:task-set/${var.ecs-cluster-name}/${var.ecs-service-name}/*"
     ]
   }
 
