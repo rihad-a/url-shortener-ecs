@@ -46,7 +46,7 @@ jobs:
           terraform_version: "1.14.3"
 
       - name: Running a Terraform Init  
-        run: terraform -chdir=terraform/deployment init
+        run: terraform -chdir=terraform/infra init
         
       - name: Terraform Format
         run: terraform fmt
@@ -62,12 +62,12 @@ jobs:
       - name: Terraform Plan (Checkov)
         run: |
           pip install checkov
-          terraform -chdir=terraform/deployment plan -out my-tf.plan
-          terraform -chdir=terraform/deployment show -json my-tf.plan | jq '.' > my-tf.json
+          terraform -chdir=terraform/infra plan -out my-tf.plan
+          terraform -chdir=terraform/infra show -json my-tf.plan | jq '.' > my-tf.json
           checkov -f my-tf.json --soft-fail 
 
       - name: Running a Terraform Plan
-        run: terraform -chdir=terraform/deployment plan -out=tfplan -input=false
+        run: terraform -chdir=terraform/infra plan -out=tfplan -input=false
       
       - name: Uploading Terraform Plan
         uses: actions/upload-artifact@v4

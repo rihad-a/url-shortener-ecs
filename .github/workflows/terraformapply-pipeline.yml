@@ -33,7 +33,7 @@ jobs:
           terraform_version: "1.14.3"
 
       - name: Running a Terraform Init  
-        run: terraform -chdir=terraform/deployment init
+        run: terraform -chdir=terraform/infra init
 
       - name: Downloading Terraform Plan
         uses: dawidd6/action-download-artifact@v3
@@ -43,6 +43,6 @@ jobs:
           path: ./
 
       - name: Running a Terraform Apply
-        run: terraform -chdir=terraform/deployment apply -auto-approve tfplan
+        run: terraform -chdir=terraform/infra apply -auto-approve tfplan
         
 
