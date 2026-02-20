@@ -35,7 +35,6 @@ ecs-desiredcount                         = 1
 # CodeDeploy Variables
 
 deployment-config                        = "CodeDeployDefault.ECSAllAtOnce"
-region                                   = "eu-west-2"
 
 # WAF Variables
 

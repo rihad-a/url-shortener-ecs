@@ -99,16 +99,12 @@ variable "ecs-desiredcount" {
   description = "The number of instances for the task definition to be deployed"
 }
 
+
 # CodeDeploy Variables
 
 variable "deployment-config" {
   type        = string
   description = "deployment configuration type for codedeploy"
-}
-
-variable "region" {
-  type        = string
-  description = "The current region"
 }
 
 
