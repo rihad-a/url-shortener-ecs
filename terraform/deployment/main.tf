@@ -49,6 +49,7 @@ application-port                         = var.application-port
   tg-blue-arn       = module.alb.tg-blue-arn
   subnetpri1_id     = module.aws_vpc.subnet-pri1
   vpc_id            = module.aws_vpc.vpc-id
+  db-table-name     = module.dynamodb.db-table-name
 }
 
 # Route53 Module
@@ -79,7 +80,6 @@ module "codedeploy" {
   source = "./modules/codedeploy"
 
   deployment-config = var.deployment-config
-  region            = var.region
 
   # Use these outputs
   tg-blue-name        = module.alb.tg-blue-name
@@ -87,7 +87,6 @@ module "codedeploy" {
   lb-listener-arn     = module.alb.lb-listener-arn
   ecs-cluster-name    = module.ecs.ecs-cluster-name
   ecs-service-name    = module.ecs.ecs-service-name
-
 }
 
 # WAF Module
