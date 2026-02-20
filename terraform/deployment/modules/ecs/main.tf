@@ -35,6 +35,8 @@ resource "aws_iam_role" "ecsTaskRole" {
     depends_on = [data.aws_iam_policy_document.assume-role-policy]
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "dynamodb-policy" {
     statement {
       effect = "Allow"
@@ -43,7 +45,7 @@ data "aws_iam_policy_document" "dynamodb-policy" {
         "dynamodb:PutItem"
       ]
       resources = [
-        "arn:aws:dynamodb:eu-west-2:291759414346:table/url-shortener"
+        "arn:aws:dynamodb:eu-west-2:${data.aws_caller_identity.current.account_id}:table/${var.db-table-name}"
         ]
     }
 
@@ -99,7 +101,7 @@ resource "aws_ecs_task_definition" "ecs-docker" {
         }
       }
       environment = [
-        {"name": "TABLE_NAME", "value": "url-shortener"},
+        {"name": "TABLE_NAME", "value": "${var.db-table-name}"},
         {"name": "AWS_DEFAULT_REGION", "value": "eu-west-2"}
       ]
     }

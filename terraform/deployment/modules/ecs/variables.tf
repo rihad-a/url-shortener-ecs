@@ -37,6 +37,7 @@ variable "ecs-desiredcount" {
   description = "The number of instances for the task definition to be deployed"
 }
 
+
 # Module Variables 
 
 variable "tg-blue-arn" {
@@ -52,6 +53,11 @@ variable "subnetpri1_id" {
 variable "vpc_id" {
   type        = string
   description = "The vpc id from the vpc module"
+}
+
+variable "db-table-name" {
+  type        = string
+  description = "The DyanamoDB table name"
 }
 
 
