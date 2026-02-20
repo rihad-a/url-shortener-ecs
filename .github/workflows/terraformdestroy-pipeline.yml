@@ -1,0 +1,39 @@
+name: Running a Terraform Destroy
+
+on:
+  workflow_dispatch:
+
+env: 
+  AWS_REGION : "eu-west-2"
+
+permissions:
+      id-token: write
+      contents: read   
+
+jobs:
+  TerraformDestroy:
+    runs-on: ubuntu-24.04
+    steps:
+      
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: ${{ secrets.GitHubActionsRole }}
+          role-session-name: GitHubActionsRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Running Terraform commands
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.3"
+
+      - name: Running a Terraform Init  
+        run: terraform -chdir=terraform/deployment init
+
+      - name: Running a Terraform Destroy
+        run: terraform -chdir=terraform/deployment destroy -auto-approve
+    
+
