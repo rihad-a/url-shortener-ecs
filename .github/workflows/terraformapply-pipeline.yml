@@ -1,0 +1,48 @@
+name: Running a Terraform Apply
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION : "eu-west-2"
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  TerraformApply:
+    runs-on: ubuntu-24.04
+    steps:
+      
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive 
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: ${{ secrets.GitHubActionsRole }}
+          role-session-name: GitHubActionsRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Running Terraform commands
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.3"
+
+      - name: Running a Terraform Init  
+        run: terraform -chdir=terraform/deployment init
+
+      - name: Downloading Terraform Plan
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: terraformplan-pipeline.yml
+          name: tfplan
+          path: ./
+
+      - name: Running a Terraform Apply
+        run: terraform -chdir=terraform/deployment apply -auto-approve tfplan
+        
+
