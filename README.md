@@ -1,4 +1,4 @@
-# URL Shortener ECS with CodeDeploy Blue-Green Deployments
+# Project Blue-Green 
 
 Automated deployment of a **URL Shortener Application** using **AWS ECS Fargate**, **CodeDeploy Blue-Green Deployments**, **Terraform**, **Docker**, and **CI/CD pipelines**. Provides zero-downtime deployments with automatic health checks, traffic switching, and rollback capabilities.
 
