@@ -1,4 +1,4 @@
-FROM python:3.13-alpine AS builder
+FROM python@sha256:bb1f2fdb1065c85468775c9d680dcd344f6442a2d1181ef7916b60a623f11d40 AS builder
 # sha value is to utilise python:3.13-slim base image
 
 WORKDIR /app
@@ -9,7 +9,7 @@ RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-FROM python:3.13-alpine AS production
+FROM python@sha256:bb1f2fdb1065c85468775c9d680dcd344f6442a2d1181ef7916b60a623f11d40 AS production
 # sha value is to utilise python:3.13-alpine base image
 
 RUN adduser -u 1001 -D rihad
