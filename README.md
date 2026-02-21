@@ -64,10 +64,15 @@ The application is a containerised Python FastAPI service with DynamoDB persiste
 - **AWS Account** with appropriate IAM permissions
 - **AWS CLI** 2.13+ installed and configured
 - **Docker** 24.0+ installed locally
-- **Terraform** 1.5.0+ installed
+- **Terraform** 1.14.3 installed
+- **Python** 3.13+ (for local development)
 - **Cloudflare** account with registered domain
 - **Cloudflare API Token** and Zone ID
 - **GitHub OIDC** configured with IAM role for automated deployments
+
+**Required Terraform Providers:**
+- AWS Provider: 6.27.0
+- Cloudflare Provider: 5.15.0+
 
 <br>
 
